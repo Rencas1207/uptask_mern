@@ -52,7 +52,12 @@ const autenticar = async (req, res) => {
    }
 }
 
+const confirmar = async (req, res) => {
+   console.log(req.params.token) // routing dinamico
+}
+
 export {
    registrar,
-   autenticar
+   autenticar,
+   confirmar
 }
