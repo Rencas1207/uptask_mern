@@ -53,7 +53,21 @@ const autenticar = async (req, res) => {
 }
 
 const confirmar = async (req, res) => {
-   console.log(req.params.token) // routing dinamico
+   const { token } = req.params;
+   const usuarioConfirmar = await Usuario.findOne({ token });
+   if (!usuarioConfirmar) {
+      const error = new Error('El token no es válido');
+      return res.status(403).json({ msg: error.message });
+   }
+
+   try {
+      usuarioConfirmar.confirmado = true;
+      usuarioConfirmar.token = ""; // token de un solo uso
+      await usuarioConfirmar.save();
+      res.json({ msg: 'Usuario confirmado correctamente' });
+   } catch (error) {
+      console.log(error);
+   }
 }
 
 export {
