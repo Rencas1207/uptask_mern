@@ -123,6 +123,9 @@ const nuevoPassword = async (req, res) => {
    }
 }
 
+const perfil = async (req, res) => {
+   console.log('desde perfil xd')
+}
 
 export {
    registrar,
@@ -130,5 +133,6 @@ export {
    confirmar,
    olvidePassword,
    comprobarToken,
-   nuevoPassword
+   nuevoPassword,
+   perfil
 }
