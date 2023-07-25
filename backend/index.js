@@ -15,7 +15,7 @@ conectarDB();
 
 //Configurar CORS
 // Add white list for requets
-const whiteList = ["http://127.0.0.1:5173"];
+const whiteList = [process.env.FRONTEND_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {
