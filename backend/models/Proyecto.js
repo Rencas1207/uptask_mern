@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const proyectosSchema = mongoose.Schema({
-   nombre: {
+   name: {
       type: String,
       trim: true,
       require: true
    },
-   descripcion: {
+   description: {
       type: String,
       trim: true,
       required: true
@@ -15,7 +15,7 @@ const proyectosSchema = mongoose.Schema({
       type: Date,
       default: Date.now()
    },
-   cliente: {
+   client: {
       type: String,
       trim: true,
       required: true,
