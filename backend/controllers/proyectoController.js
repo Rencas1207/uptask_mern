@@ -54,10 +54,10 @@ const editarProyecto = async (req, res) => {
       return res.status(401).json({ msg: error.message });
    }
 
-   proyecto.nombre = req.body.nombre || proyecto.nombre;
-   proyecto.descripcion = req.body.descripcion || proyecto.descripcion;
-   proyecto.fechaEntrega = req.body.fechaEntrega || proyecto.fechaEntrega;
-   proyecto.cliente = req.body.cliente || proyecto.cliente;
+   proyecto.name = req.body.name || proyecto.name;
+   proyecto.description = req.body.description || proyecto.description;
+   proyecto.deliverDate = req.body.deliverDate || proyecto.deliverDate;
+   proyecto.client = req.body.client || proyecto.client;
 
    try {
       const proyectoAlmacenado = await proyecto.save();

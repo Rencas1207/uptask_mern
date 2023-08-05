@@ -11,7 +11,7 @@ const proyectosSchema = mongoose.Schema({
       trim: true,
       required: true
    },
-   fechaEntrega: {
+   deliverDate: {
       type: Date,
       default: Date.now()
    },
