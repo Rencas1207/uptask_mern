@@ -66,6 +66,7 @@ function Login() {
           <input
             type="email"
             id="email"
+            autoComplete="username"
             placeholder="Email de Registro"
             className="w-full mt-3 p-3 outline-none rounded-xl bg-gray-50"
             value={email}
@@ -82,6 +83,7 @@ function Login() {
           <input
             type="password"
             id="password"
+            autoComplete="current-password"
             placeholder="Password de Registro"
             className="w-full mt-3 p-3 outline-none rounded-xl bg-gray-50"
             value={password}
