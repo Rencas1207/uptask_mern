@@ -1,12 +1,40 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import useProjects from '../hooks/useProjects';
+import Alert from './Alert';
+import { useParams } from 'react-router-dom';
+
+const PRIORITY = ['Baja', 'Media', 'Alta'];
 
 const ModalFormularioTarea = () => {
-  const { modalFormTask, handleModalTask } = useProjects();
+  const { modalFormTask, handleModalTask, showAlert, alert, submitTask } =
+    useProjects();
   const [name, setName] = useState('');
+  const [deliverDate, setDeliverDate] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('');
+
+  const params = useParams();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if ([name, description, priority, deliverDate].includes('')) {
+      showAlert({ msg: 'Todos los campos son obligatorios', error: true });
+      return;
+    }
+
+    await submitTask({
+      name,
+      description,
+      priority,
+      deliverDate,
+      project: params.id,
+    });
+  };
+
+  const { msg } = alert;
+
   return (
     <Transition.Root show={modalFormTask} as={Fragment}>
       <Dialog
@@ -72,7 +100,85 @@ const ModalFormularioTarea = () => {
                   <Dialog.Title
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
-                  ></Dialog.Title>
+                  >
+                    Crear Tarea
+                  </Dialog.Title>
+                  {msg && <Alert alert={alert} />}
+                  <form className="my-10" onSubmit={handleSubmit}>
+                    <div className="mb-5">
+                      <label
+                        className="text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="name"
+                      >
+                        Nombre Tarea
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="Nombre de la tarea"
+                        className="outline-none border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        className="text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="deliver-date"
+                      >
+                        Fecha de Entrega
+                      </label>
+                      <input
+                        type="date"
+                        id="deliver-date"
+                        className="outline-none border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={deliverDate}
+                        onChange={(e) => setDeliverDate(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        className="text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="description"
+                      >
+                        Descripción Tarea
+                      </label>
+                      <textarea
+                        id="description"
+                        placeholder="Descripción de la tarea"
+                        className="outline-none border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-5">
+                      <label
+                        className="text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="priority"
+                      >
+                        Prioridad
+                      </label>
+                      <select
+                        id="priority"
+                        className="outline-none border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                      >
+                        <option value="">--Seleccionar--</option>
+                        {PRIORITY.map((priority) => (
+                          <option key={priority}>{priority}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <input
+                      type="submit"
+                      className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm"
+                      value="Crear Tarea"
+                    />
+                  </form>
                 </div>
               </div>
             </div>

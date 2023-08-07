@@ -1,31 +1,31 @@
 import mongoose from "mongoose";
 
 const tareaSchema = mongoose.Schema({
-   nombre: {
+   name: {
       type: String,
       trim: true,
       required: true
    },
-   descripcion: {
+   description: {
       type: String,
       trim: true,
       required: true
    },
-   estado: {
+   status: {
       type: Boolean,
       default: false,
    },
-   fechaEntrega: {
+   deliverDate: {
       type: Date,
       required: true,
       default: Date.now()
    },
-   prioridad: {
+   priority: {
       type: String,
       required: true,
       enum: ['Baja', 'Media', 'Alta']
    },
-   proyecto: {
+   project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Proyecto"
    }
