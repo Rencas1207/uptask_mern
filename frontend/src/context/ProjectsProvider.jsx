@@ -196,10 +196,13 @@ const ProjectsProvider = ({ children }) => {
       };
 
       const { data } = await clientAxios.post('/tareas', task, config);
-      showAlert({
-        msg: 'Tarea creada correctamente',
-        error: false,
-      });
+
+      // Add the task to the state
+      const projectUpdated = { ...project };
+      projectUpdated.tasks = [...project.tasks, data];
+
+      setProject(projectUpdated);
+      setAlert({});
       setModalFormTask(false);
     } catch (error) {
       console.log(error);

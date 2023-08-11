@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import ModalTaskForm from '../components/ModalTaskForm';
+import Task from '../components/Task';
 
 const Project = () => {
   const { id } = useParams();
@@ -59,6 +60,18 @@ const Project = () => {
         </svg>
         Nueva Tarea
       </button>
+
+      <p className="font-bold text-xl mt-10">Tareas del Proyecto</p>
+
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {project.tasks?.length ? (
+          project.tasks?.map((task) => <Task key={task._id} task={task} />)
+        ) : (
+          <p className="text-center my-5 p-10">
+            No hay tareas en este proyecto
+          </p>
+        )}
+      </div>
 
       <ModalTaskForm modal={modal} setModal={setModal} />
     </>
