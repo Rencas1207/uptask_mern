@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import ModalTaskForm from '../components/ModalTaskForm';
@@ -7,7 +7,6 @@ import Task from '../components/Task';
 const Project = () => {
   const { id } = useParams();
   const { getProject, project, loading, handleModalTask } = useProjects();
-  const [modal, setModal] = useState(false);
 
   const { name } = project;
 
@@ -73,7 +72,7 @@ const Project = () => {
         )}
       </div>
 
-      <ModalTaskForm modal={modal} setModal={setModal} />
+      <ModalTaskForm />
     </>
   );
 };

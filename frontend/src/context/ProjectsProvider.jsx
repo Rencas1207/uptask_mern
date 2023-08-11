@@ -10,6 +10,7 @@ const ProjectsProvider = ({ children }) => {
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(false);
   const [modalFormTask, setModalFormTask] = useState(false);
+  const [task, setTask] = useState({});
 
   const navigate = useNavigate();
 
@@ -181,9 +182,18 @@ const ProjectsProvider = ({ children }) => {
 
   const handleModalTask = () => {
     setModalFormTask(!modalFormTask);
+    setTask({});
   };
 
   const submitTask = async (task) => {
+    if (task?.id) {
+      await editTask(task);
+    } else {
+      await createTask(task);
+    }
+  };
+
+  const createTask = async (taskJSON) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -195,11 +205,11 @@ const ProjectsProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clientAxios.post('/tareas', task, config);
+      const { data } = await clientAxios.post('/tareas', taskJSON, config);
 
       // Add the task to the state
       const projectUpdated = { ...project };
-      projectUpdated.tasks = [...project.tasks, data];
+      projectUpdated.tasks = [...project.taskJSON, data];
 
       setProject(projectUpdated);
       setAlert({});
@@ -207,6 +217,36 @@ const ProjectsProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const editTask = async (taskJSON) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.put(
+        `/tareas/${taskJSON.id}`,
+        taskJSON,
+        config
+      );
+
+      // TODO: Update DOM
+
+      setAlert({});
+      setModalFormTask(false);
+    } catch (error) {}
+  };
+
+  const handleModalEditTask = (task) => {
+    setTask(task);
+    setModalFormTask(true);
   };
 
   return (
@@ -224,6 +264,8 @@ const ProjectsProvider = ({ children }) => {
         modalFormTask,
         handleModalTask,
         submitTask,
+        handleModalEditTask,
+        task,
       }}
     >
       {children}
