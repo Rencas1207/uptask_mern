@@ -31,6 +31,10 @@ const ModalFormularioTarea = () => {
       deliverDate,
       project: params.id,
     });
+    setName('');
+    setDescription('');
+    setDeliverDate('');
+    setPriority('');
   };
 
   const { msg } = alert;
