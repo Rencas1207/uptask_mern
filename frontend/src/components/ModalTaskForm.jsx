@@ -7,14 +7,31 @@ import { useParams } from 'react-router-dom';
 const PRIORITY = ['Baja', 'Media', 'Alta'];
 
 const ModalFormularioTarea = () => {
-  const { modalFormTask, handleModalTask, showAlert, alert, submitTask } =
+  const { modalFormTask, handleModalTask, showAlert, alert, submitTask, task } =
     useProjects();
+  const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [deliverDate, setDeliverDate] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('');
 
   const params = useParams();
+
+  useEffect(() => {
+    if (task?._id) {
+      setId(task._id);
+      setName(task.name);
+      setDescription(task.description);
+      setDeliverDate(task.deliverDate?.split('T')[0]);
+      setPriority(task.priority);
+      return;
+    }
+    setId('');
+    setName('');
+    setDescription('');
+    setDeliverDate('');
+    setPriority('');
+  }, [task]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,12 +42,15 @@ const ModalFormularioTarea = () => {
     }
 
     await submitTask({
+      id,
       name,
       description,
       priority,
       deliverDate,
       project: params.id,
     });
+
+    setId('');
     setName('');
     setDescription('');
     setDeliverDate('');
@@ -105,7 +125,7 @@ const ModalFormularioTarea = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    Crear Tarea
+                    {id ? 'Editar Tarea' : 'Crear Tarea'}
                   </Dialog.Title>
                   {msg && <Alert alert={alert} />}
                   <form className="my-10" onSubmit={handleSubmit}>
@@ -180,7 +200,7 @@ const ModalFormularioTarea = () => {
                     <input
                       type="submit"
                       className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm"
-                      value="Crear Tarea"
+                      value={id ? 'Editar Tarea' : 'Crear Tarea'}
                     />
                   </form>
                 </div>
