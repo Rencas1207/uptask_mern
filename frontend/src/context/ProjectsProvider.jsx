@@ -238,7 +238,11 @@ const ProjectsProvider = ({ children }) => {
       );
 
       // TODO: Update DOM
-
+      const projectUpdated = { ...project };
+      projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
+        taskState._id === data._id ? data : taskState
+      );
+      setProject(projectUpdated);
       setAlert({});
       setModalFormTask(false);
     } catch (error) {}
