@@ -2,7 +2,7 @@ import { formatDate } from '../helpers/formatDate';
 import useProjects from '../hooks/useProjects';
 
 const Task = ({ task }) => {
-  const { handleModalEditTask } = useProjects();
+  const { handleModalEditTask, handleModalDeleteTask } = useProjects();
   const { name, description, priority, deliverDate, _id, status } = task;
 
   return (
@@ -29,7 +29,10 @@ const Task = ({ task }) => {
             Incompleta
           </button>
         )}
-        <button className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg ">
+        <button
+          onClick={() => handleModalDeleteTask(task)}
+          className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg "
+        >
           Eliminar
         </button>
       </div>

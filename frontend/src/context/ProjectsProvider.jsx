@@ -11,6 +11,7 @@ const ProjectsProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [modalFormTask, setModalFormTask] = useState(false);
   const [task, setTask] = useState({});
+  const [modalDeleteTask, setModalDeleteTask] = useState(false);
 
   const navigate = useNavigate();
 
@@ -193,7 +194,7 @@ const ProjectsProvider = ({ children }) => {
     }
   };
 
-  const createTask = async (taskJSON) => {
+  const createTask = async (task) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -205,11 +206,11 @@ const ProjectsProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clientAxios.post('/tareas', taskJSON, config);
+      const { data } = await clientAxios.post('/tareas', task, config);
 
       // Add the task to the state
       const projectUpdated = { ...project };
-      projectUpdated.tasks = [...project.taskJSON, data];
+      projectUpdated.tasks = [...project.tasks, data];
 
       setProject(projectUpdated);
       setAlert({});
@@ -219,7 +220,7 @@ const ProjectsProvider = ({ children }) => {
     }
   };
 
-  const editTask = async (taskJSON) => {
+  const editTask = async (task) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -232,8 +233,8 @@ const ProjectsProvider = ({ children }) => {
       };
 
       const { data } = await clientAxios.put(
-        `/tareas/${taskJSON.id}`,
-        taskJSON,
+        `/tareas/${task.id}`,
+        task,
         config
       );
 
@@ -253,6 +254,45 @@ const ProjectsProvider = ({ children }) => {
     setModalFormTask(true);
   };
 
+  const handleModalDeleteTask = (task) => {
+    setTask(task);
+    setModalDeleteTask(!modalDeleteTask);
+  };
+
+  const deleteTask = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.delete(`/tareas/${task._id}`, config);
+      // console.log(data?.msg);
+      setAlert({
+        msg: data?.msg,
+        error: false,
+      });
+      const projectUpdated = { ...project };
+      projectUpdated.tasks = projectUpdated.tasks.filter(
+        (taskState) => taskState._id !== task._id
+      );
+
+      setTimeout(() => {
+        setAlert({});
+      }, 2000);
+      setProject(projectUpdated);
+      setModalDeleteTask(false);
+      setTask({});
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -270,6 +310,9 @@ const ProjectsProvider = ({ children }) => {
         submitTask,
         handleModalEditTask,
         task,
+        modalDeleteTask,
+        handleModalDeleteTask,
+        deleteTask,
       }}
     >
       {children}
