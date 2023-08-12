@@ -12,6 +12,7 @@ const ProjectsProvider = ({ children }) => {
   const [modalFormTask, setModalFormTask] = useState(false);
   const [task, setTask] = useState({});
   const [modalDeleteTask, setModalDeleteTask] = useState(false);
+  const [collaborator, setCollaborator] = useState({});
 
   const navigate = useNavigate();
 
@@ -142,7 +143,10 @@ const ProjectsProvider = ({ children }) => {
       const { data } = await clientAxios(`/proyectos/${id}`, config);
       setProject(data);
     } catch (error) {
-      console.log(error);
+      setAlert({
+        msg: error.response.data.msg,
+        error: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -294,7 +298,70 @@ const ProjectsProvider = ({ children }) => {
   };
 
   const submitCollaborator = async (email) => {
-    console.log(email);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.post(
+        '/proyectos/colaboradores',
+        { email },
+        config
+      );
+      setCollaborator(data);
+      setAlert({});
+    } catch (error) {
+      showAlert({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addCollaborator = async (email) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clientAxios.post(
+        `/proyectos/colaboradores/${project._id}`,
+        email,
+        config
+      );
+      setAlert({
+        msg: data.msg,
+        error: false,
+      });
+      setCollaborator({});
+      setTimeout(() => {
+        setAlert({});
+        navigate(-1);
+      }, 2000);
+    } catch (error) {
+      showAlert({
+        msg: error.response.data.msg,
+        error: true,
+      });
+      setTimeout(() => {
+        setAlert({});
+      }, 2000);
+    }
   };
 
   return (
@@ -318,6 +385,8 @@ const ProjectsProvider = ({ children }) => {
         handleModalDeleteTask,
         deleteTask,
         submitCollaborator,
+        collaborator,
+        addCollaborator,
       }}
     >
       {children}
