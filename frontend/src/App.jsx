@@ -15,6 +15,7 @@ import Project from './pages/Project';
 import { AuthProvider } from './context/AuthProvider';
 import { ProjectsProvider } from './context/ProjectsProvider';
 import EditProject from './pages/EditProject';
+import NewCollaborator from './pages/NewCollaborator';
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
             <Route path="/projects" element={<ProtectedRoute />}>
               <Route index element={<Projects />} />
               <Route path="create-project" element={<NewProject />} />
+              <Route
+                path="new-collaborator/:id"
+                element={<NewCollaborator />}
+              />
               <Route path=":id" element={<Project />} />
               <Route path="edit/:id" element={<EditProject />} />
             </Route>
