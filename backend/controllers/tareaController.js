@@ -74,7 +74,7 @@ const actualizarTarea = async (req, res) => {
 }
 const eliminarTarea = async (req, res) => {
    const { id } = req.params;
-   const tarea = await Tarea.findById(id).populate("proyecto"); // populate agrega una nueva key al object
+   const tarea = await Tarea.findById(id).populate("project"); // populate agrega una nueva key al object
 
    if (!tarea) {
       const error = new Error('Tarea no encontrada');
@@ -82,14 +82,14 @@ const eliminarTarea = async (req, res) => {
    }
 
    // Determinar si la tarea es el mismo que el creador la haya creado
-   if (tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
+   if (tarea.project.creador.toString() !== req.usuario._id.toString()) {
       const error = new Error('Acción no permitida');
       return res.status(403).json({ msg: error.message });
    }
 
    try {
       await tarea.deleteOne();
-      res.json({ msg: 'Tarea eliminada' });
+      res.json({ msg: 'La tarea se eliminó' });
    } catch (error) {
       console.log(error)
    }
