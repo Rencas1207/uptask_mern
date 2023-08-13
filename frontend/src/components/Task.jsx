@@ -1,8 +1,10 @@
 import { formatDate } from '../helpers/formatDate';
+import useAdmin from '../hooks/useAdmin';
 import useProjects from '../hooks/useProjects';
 
 const Task = ({ task }) => {
   const { handleModalEditTask, handleModalDeleteTask } = useProjects();
+  const admin = useAdmin();
   const { name, description, priority, deliverDate, _id, status } = task;
 
   return (
@@ -14,12 +16,15 @@ const Task = ({ task }) => {
         <p className="text-gray-600 mb-1">Prioridad: {priority}</p>
       </div>
       <div className="flex gap-2">
-        <button
-          onClick={() => handleModalEditTask(task)}
-          className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg "
-        >
-          Editar
-        </button>
+        {admin && (
+          <button
+            onClick={() => handleModalEditTask(task)}
+            className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg "
+          >
+            Editar
+          </button>
+        )}
+
         {status ? (
           <button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg ">
             Completa
@@ -29,12 +34,15 @@ const Task = ({ task }) => {
             Incompleta
           </button>
         )}
-        <button
-          onClick={() => handleModalDeleteTask(task)}
-          className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg "
-        >
-          Eliminar
-        </button>
+
+        {admin && (
+          <button
+            onClick={() => handleModalDeleteTask(task)}
+            className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg "
+          >
+            Eliminar
+          </button>
+        )}
       </div>
     </div>
   );
