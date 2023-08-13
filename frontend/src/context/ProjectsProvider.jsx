@@ -405,6 +405,9 @@ const ProjectsProvider = ({ children }) => {
       }, 2000);
     } catch (error) {
       console.log(error.response);
+      setTimeout(() => {
+        setAlert({});
+      }, 2000);
     }
   };
 
