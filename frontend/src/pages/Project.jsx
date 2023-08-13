@@ -15,14 +15,16 @@ const Project = () => {
 
   const { name } = project;
 
+  // if (loading) return 'Cargando...';
+
   const { msg } = alert;
 
   useEffect(() => {
     getProject(id);
   }, []);
 
-  return loading ? (
-    'Cargando...'
+  return msg && alert.error ? (
+    <Alert alert={alert} />
   ) : (
     <>
       <div className="flex justify-between">
