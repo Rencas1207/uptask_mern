@@ -88,7 +88,12 @@ const eliminarTarea = async (req, res) => {
    }
 
    try {
-      await tarea.deleteOne();
+      const proyecto = await Proyecto.findById(tarea.project)
+      proyecto.tasks.pull(tarea._id);
+      await Promise.allSettled([
+         await proyecto.save(),
+      ]);
+      await tarea.deleteOne()
       res.json({ msg: 'La tarea se eliminó' });
    } catch (error) {
       console.log(error)
@@ -105,7 +110,7 @@ const cambiarEstado = async (req, res) => {
    }
 
    // Determinar si la tarea es el mismo que el creador la haya creado
-   if (tarea.project.creador.toString() !== req.usuario._id.toString() && !project.colaboradores.some(colaborador => colaborador._id.toString() === req.usuario._id.toString())) {
+   if (tarea.project.creador.toString() !== req.usuario._id.toString() && !tarea.project.colaboradores.some(colaborador => colaborador._id.toString() === req.usuario._id.toString())) {
       const error = new Error('Acción no permitida');
       return res.status(403).json({ msg: error.message });
    }
