@@ -423,8 +423,20 @@ const ProjectsProvider = ({ children }) => {
         },
       };
 
-      const { data } = clientAxios.post(`/tareas/estado/${id}`, {}, config);
-      console.log(data);
+      const { data } = await clientAxios.post(
+        `/tareas/estado/${id}`,
+        {},
+        config
+      );
+      // console.log(data);
+
+      const projectUpdated = { ...project };
+      projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
+        taskState._id === data._id ? data : taskState
+      );
+      setProject(projectUpdated);
+      setTask({});
+      setAlert({});
     } catch (error) {
       console.log(error.response);
     }

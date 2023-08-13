@@ -14,12 +14,8 @@ const Project = () => {
   const { getProject, project, loading, handleModalTask, alert } =
     useProjects();
   const admin = useAdmin();
-  console.log(admin);
 
   const { name } = project;
-
-  // if (loading) return 'Cargando...';
-
   const { msg } = alert;
 
   useEffect(() => {
