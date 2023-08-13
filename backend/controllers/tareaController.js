@@ -96,7 +96,23 @@ const eliminarTarea = async (req, res) => {
 }
 
 const cambiarEstado = async (req, res) => {
-   console.log(req.params.id);
+   const { id } = req.params;
+   const tarea = await Tarea.findById(id).populate("project"); // populate agrega una nueva key al object
+
+   if (!tarea) {
+      const error = new Error('Tarea no encontrada');
+      return res.status(401).json({ msg: error.message });
+   }
+
+   // Determinar si la tarea es el mismo que el creador la haya creado
+   if (tarea.project.creador.toString() !== req.usuario._id.toString() && !project.colaboradores.some(colaborador => colaborador._id.toString() === req.usuario._id.toString())) {
+      const error = new Error('Acción no permitida');
+      return res.status(403).json({ msg: error.message });
+   }
+
+   tarea.status = !tarea.status;
+   await tarea.save();
+   res.json(tarea);
 }
 
 export {
