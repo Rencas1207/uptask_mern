@@ -428,7 +428,6 @@ const ProjectsProvider = ({ children }) => {
         {},
         config
       );
-      // console.log(data);
 
       const projectUpdated = { ...project };
       projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
