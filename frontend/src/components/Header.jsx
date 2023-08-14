@@ -3,7 +3,7 @@ import useProjects from '../hooks/useProjects';
 import Search from './Search';
 
 const Header = () => {
-  const { searchEngine, handleSearchEngine } = useProjects();
+  const { handleSearchEngine } = useProjects();
   return (
     <header className="px-4 py-5 bg-white border-b">
       <div className="md:flex md:justify-between">

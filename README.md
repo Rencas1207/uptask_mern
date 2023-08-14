@@ -19,3 +19,8 @@ Too
 ## Install Headless UI
 
 - npm install @headlessui/react
+
+## Install Socket
+
+- Folder Backend: npm i socket.io
+- Folder Frontend: npm i socket.io-client
