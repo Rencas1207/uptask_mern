@@ -16,7 +16,6 @@ const Project = () => {
   const admin = useAdmin();
 
   const { name } = project;
-  const { msg } = alert;
 
   useEffect(() => {
     getProject(id);
