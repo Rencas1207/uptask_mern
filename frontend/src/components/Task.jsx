@@ -15,6 +15,11 @@ const Task = ({ task }) => {
         <p className="text-sm text-gray-500 uppercase mb-1">{description}</p>
         <p className="text-SM mb-1">{formatDate(deliverDate)}</p>
         <p className="text-gray-600 mb-1">Prioridad: {priority}</p>
+        {status && (
+          <p className="text-xs bg-green-600 uppercase py-1 px-2 rounded-lg text-white inline-block">
+            Completado por: {task.completed.nombre}
+          </p>
+        )}
       </div>
       <div className="flex gap-2">
         {admin && (
