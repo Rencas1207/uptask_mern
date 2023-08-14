@@ -9,7 +9,7 @@ const Task = ({ task }) => {
   const { name, description, priority, deliverDate, _id, status } = task;
 
   return (
-    <div className="border-b p-5 flex justify-between items-center">
+    <div className="border-b p-5 flex flex-col gap-5 md:flex-row justify-between items-center">
       <div>
         <p className="text-xl mb-1">{name}</p>
         <p className="text-sm text-gray-500 uppercase mb-1">{description}</p>
@@ -21,7 +21,7 @@ const Task = ({ task }) => {
           </p>
         )}
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-col md:flex-row gap-2">
         {admin && (
           <button
             onClick={() => handleModalEditTask(task)}
