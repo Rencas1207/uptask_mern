@@ -14,6 +14,7 @@ const ProjectsProvider = ({ children }) => {
   const [modalDeleteTask, setModalDeleteTask] = useState(false);
   const [collaborator, setCollaborator] = useState({});
   const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false);
+  const [searchEngine, setSearchEngine] = useState(false);
 
   const navigate = useNavigate();
 
@@ -446,6 +447,10 @@ const ProjectsProvider = ({ children }) => {
     }
   };
 
+  const handleSearchEngine = () => {
+    setSearchEngine(!searchEngine);
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -473,6 +478,8 @@ const ProjectsProvider = ({ children }) => {
         modalDeleteCollaborator,
         deleteCollaborator,
         completeTask,
+        searchEngine,
+        handleSearchEngine,
       }}
     >
       {children}
