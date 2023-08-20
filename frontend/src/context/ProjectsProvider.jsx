@@ -256,14 +256,11 @@ const ProjectsProvider = ({ children }) => {
         config
       );
 
-      // TODO: Update DOM
-      const projectUpdated = { ...project };
-      projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
-        taskState._id === data._id ? data : taskState
-      );
-      setProject(projectUpdated);
       setAlert({});
       setModalFormTask(false);
+
+      // SOCKET IO
+      socket.emit('update task', data);
     } catch (error) {}
   };
 
@@ -471,6 +468,14 @@ const ProjectsProvider = ({ children }) => {
     setProject(projectUpdated);
   };
 
+  const updateTaskProject = (task) => {
+    const projectUpdated = { ...project };
+    projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
+      taskState._id === task._id ? task : taskState
+    );
+    setProject(projectUpdated);
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -502,6 +507,7 @@ const ProjectsProvider = ({ children }) => {
         handleSearchEngine,
         submitTasksProject,
         deleteTaskProject,
+        updateTaskProject,
       }}
     >
       {children}
