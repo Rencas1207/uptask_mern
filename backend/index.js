@@ -52,8 +52,19 @@ const io = new Server(servidor, {
   }
 })
 
-io.on('connection', socket => {
-  console.log('Conectado a socket.io');
+io.on('connection', (socket) => {
+  // Define socket io events
 
-  // Definir los eventos de socket io
+  socket.on('open project', (project) => {
+    // enters the same room
+    socket.join(project);
+  })
+
+  socket.on('new task', task => {
+    socket.to(task.project).emit('task added', task);
+  })
+
+  socket.on('delete task', task => {
+    socket.to(task.project).emit('task deleted', task);
+  })
 })
