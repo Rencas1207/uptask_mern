@@ -19,6 +19,7 @@ const Project = () => {
     handleModalTask,
     submitTasksProject,
     deleteTaskProject,
+    updateTaskProject,
   } = useProjects();
   const admin = useAdmin();
 
@@ -43,6 +44,12 @@ const Project = () => {
     socket.on('task deleted', (deletedTask) => {
       if (deletedTask.project === project._id) {
         deleteTaskProject(deletedTask);
+      }
+    });
+
+    socket.on('task updated', (updatedTask) => {
+      if (updatedTask.project._id === project._id) {
+        updateTaskProject(updatedTask);
       }
     });
   });
