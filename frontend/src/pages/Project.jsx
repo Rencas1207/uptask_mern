@@ -5,14 +5,21 @@ import useAdmin from '../hooks/useAdmin';
 import ModalTaskForm from '../components/ModalTaskForm';
 import ModalDeleteTask from '../components/ModalDeleteTask';
 import Task from '../components/Task';
-import Alert from '../components/Alert';
 import Collaborator from '../components/Collaborator';
 import ModalDeleteCollaborator from '../components/ModalDeleteCollaborator';
+import io from 'socket.io-client';
+
+let socket;
 
 const Project = () => {
   const { id } = useParams();
-  const { getProject, project, loading, handleModalTask, alert } =
-    useProjects();
+  const {
+    getProject,
+    project,
+    handleModalTask,
+    submitTasksProject,
+    deleteTaskProject,
+  } = useProjects();
   const admin = useAdmin();
 
   const { name } = project;
@@ -20,6 +27,25 @@ const Project = () => {
   useEffect(() => {
     getProject(id);
   }, []);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit('open project', id);
+  }, []);
+
+  useEffect(() => {
+    socket.on('task added', (newTask) => {
+      if (newTask.project === project._id) {
+        submitTasksProject(newTask);
+      }
+    });
+
+    socket.on('task deleted', (deletedTask) => {
+      if (deletedTask.project === project._id) {
+        deleteTaskProject(deletedTask);
+      }
+    });
+  });
 
   return (
     <>

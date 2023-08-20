@@ -1,6 +1,9 @@
 import { useState, useEffect, createContext } from 'react';
 import clientAxios from '../config/clientAxios';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
+
+let socket;
 
 const ProjectsContext = createContext();
 
@@ -38,6 +41,10 @@ const ProjectsProvider = ({ children }) => {
       }
     };
     getProjects();
+  }, []);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
   }, []);
 
   const showAlert = (alert) => {
@@ -220,12 +227,12 @@ const ProjectsProvider = ({ children }) => {
       const { data } = await clientAxios.post('/tareas', task, config);
 
       // Add the task to the state
-      const projectUpdated = { ...project };
-      projectUpdated.tasks = [...project.tasks, data];
 
-      setProject(projectUpdated);
       setAlert({});
       setModalFormTask(false);
+
+      // SOCKET IO
+      socket.emit('new task', data);
     } catch (error) {
       console.log(error);
     }
@@ -283,22 +290,20 @@ const ProjectsProvider = ({ children }) => {
       };
 
       const { data } = await clientAxios.delete(`/tareas/${task._id}`, config);
-      // console.log(data?.msg);
+
       setAlert({
         msg: data?.msg,
         error: false,
       });
-      const projectUpdated = { ...project };
-      projectUpdated.tasks = projectUpdated.tasks.filter(
-        (taskState) => taskState._id !== task._id
-      );
+      setModalDeleteTask(false);
 
+      // SOCKET IO
+      socket.emit('delete task', task);
+
+      setTask({});
       setTimeout(() => {
         setAlert({});
       }, 2000);
-      setProject(projectUpdated);
-      setModalDeleteTask(false);
-      setTask({});
     } catch (error) {
       console.log(error);
     }
@@ -451,6 +456,21 @@ const ProjectsProvider = ({ children }) => {
     setSearchEngine(!searchEngine);
   };
 
+  // Socket io
+  const submitTasksProject = (task) => {
+    const projectUpdated = { ...project };
+    projectUpdated.tasks = [...project.tasks, task];
+    setProject(projectUpdated);
+  };
+
+  const deleteTaskProject = (task) => {
+    const projectUpdated = { ...project };
+    projectUpdated.tasks = projectUpdated.tasks.filter(
+      (taskState) => taskState._id !== task._id
+    );
+    setProject(projectUpdated);
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -480,6 +500,8 @@ const ProjectsProvider = ({ children }) => {
         completeTask,
         searchEngine,
         handleSearchEngine,
+        submitTasksProject,
+        deleteTaskProject,
       }}
     >
       {children}
