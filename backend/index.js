@@ -71,4 +71,8 @@ io.on('connection', (socket) => {
   socket.on('update task', task => {
     socket.to(task.project._id).emit('task updated', task);
   })
+
+  socket.on('change status', task => {
+    socket.to(task.project._id).emit('new status', task);
+  })
 })
