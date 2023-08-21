@@ -20,6 +20,7 @@ const Project = () => {
     submitTasksProject,
     deleteTaskProject,
     updateTaskProject,
+    changeStatusTask,
   } = useProjects();
   const admin = useAdmin();
 
@@ -32,6 +33,10 @@ const Project = () => {
   useEffect(() => {
     socket = io(import.meta.env.VITE_BACKEND_URL);
     socket.emit('open project', id);
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -52,6 +57,19 @@ const Project = () => {
         updateTaskProject(updatedTask);
       }
     });
+
+    socket.on('new status', (newStatusTask) => {
+      if (newStatusTask.project._id === project._id) {
+        changeStatusTask(newStatusTask);
+      }
+    });
+
+    return () => {
+      socket.off('task added');
+      socket.off('task deleted');
+      socket.off('task updated');
+      socket.off('new status');
+    };
   });
 
   return (

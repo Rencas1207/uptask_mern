@@ -437,13 +437,11 @@ const ProjectsProvider = ({ children }) => {
         config
       );
 
-      const projectUpdated = { ...project };
-      projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
-        taskState._id === data._id ? data : taskState
-      );
-      setProject(projectUpdated);
       setTask({});
       setAlert({});
+
+      // SOCKET io
+      socket.emit('change status', data);
     } catch (error) {
       console.log(error.response);
     }
@@ -469,6 +467,14 @@ const ProjectsProvider = ({ children }) => {
   };
 
   const updateTaskProject = (task) => {
+    const projectUpdated = { ...project };
+    projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
+      taskState._id === task._id ? task : taskState
+    );
+    setProject(projectUpdated);
+  };
+
+  const changeStatusTask = (task) => {
     const projectUpdated = { ...project };
     projectUpdated.tasks = projectUpdated.tasks.map((taskState) =>
       taskState._id === task._id ? task : taskState
@@ -508,6 +514,7 @@ const ProjectsProvider = ({ children }) => {
         submitTasksProject,
         deleteTaskProject,
         updateTaskProject,
+        changeStatusTask,
       }}
     >
       {children}
